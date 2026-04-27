@@ -1,0 +1,26 @@
+# Week 9 ARIA v6.0 — Python dependencies
+# Pinned to a known-working set on Python 3.10–3.14 + macOS / Linux
+
+# Core scientific
+numpy>=1.26
+pandas>=2.0
+matplotlib>=3.7
+seaborn>=0.13
+scikit-learn>=1.3
+
+# Notebook
+jupyterlab>=4.0
+ipykernel>=6.25
+ipython>=8.0
+
+# STAC + Sentinel-2 (online mode)
+pystac-client>=0.7
+pystac>=1.10
+planetary-computer>=1.0
+odc-stac>=0.3
+xarray>=2024.0
+rioxarray>=0.15
+rasterio>=1.3
+
+# Reproducibility
+python-dotenv>=1.0

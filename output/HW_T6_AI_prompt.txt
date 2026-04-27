@@ -1,0 +1,15 @@
+Given these accuracy metrics from a remote-sensing change-detection workflow on
+the Matai'an barrier-lake disaster (Sentinel-2 L2A, three-scene Pre/Mid/Post,
+Δ* threshold τ = -0.10):
+
+- Overall Accuracy : 78.7%
+- Producer's Accuracy (recall)    : 66.7%
+- User's Accuracy   (precision)   : 82.4%
+- Cohen's κ                       : 0.56
+- F1                              : 0.74
+- High-confidence change area     : 58.91 km²
+- Low-confidence  change area     : 28.07 km²
+- Validation points used / total  : 47 / 60
+
+What confidence level would you assign to operational decisions made on this
+output? What additional data sources would most improve confidence?

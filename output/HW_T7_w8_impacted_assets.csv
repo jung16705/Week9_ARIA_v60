@@ -1,0 +1,4 @@
+asset,type,location,lake_hit,landslide_hit,debris_hit,notes
+光復自強外役監獄,W3-shelter,花蓮縣光復鄉,N,N,Y,光復平原土石流鋪面覆蓋
+Foxu_Debris_Zone,critical_infra,Guangfu Township,N,N,Y,佛祖街沉積區——NCDR 標註最大沉積深度區
+富民社區活動中心,W3-shelter,花蓮縣瑞穗鄉,N,Y,N,距崩塌源區 < 100 m（需邊坡評估）
