@@ -45,11 +45,21 @@ NTU 遙測與空間資訊之分析與應用 (Prof. Su Wen-Ray) — Week 9 Homewo
 
 ![Task 1 difference maps](output/HW_T1_difference_maps.png)
 
+**圖說與判讀重點：**  
+這張 2×2 panel 是本作業最核心的 cloud-masked change detection 成果。左上、右上分別比較 Pre→Mid 與 Pre→Post 的 ΔNDVI；藍色代表 NDVI 下降，也就是植被消失、裸露、淹水或崩塌造成的植被損失。左下的 ΔNDWI 用來確認水體或濕潤區增加，右下的 ΔBSI 則用來輔助辨識裸露土壤、沉積與 debris-flow corridor。圖中主要變化集中在河道、湖區與下游沖積/裸露區，表示偵測訊號不是隨機散布，而是和事件地貌位置一致。
+
+**對應數據：** `H1_delta_stats.csv` 記錄每個差異圖層的 min / mean / max；例如 ΔNDVI Pre→Mid 最低約 `-0.91`，ΔNDWI Pre→Mid 最高約 `+0.97`，符合「植被下降、水體訊號上升」的災害變化型態。
+
 - 統計表：[`output/H1_delta_stats.csv`](output/H1_delta_stats.csv)
 
 ### Task 2: Threshold Optimization
 
 ![Task 2 PA UA F1 curve](output/HW_T2_pa_ua_f1_curve.png)
+
+**圖說與判讀重點：**  
+這張圖比較不同 ΔNDVI threshold 下的 Producer's Accuracy (PA)、User's Accuracy (UA) 與 F1-score。threshold 越寬鬆，例如 `-0.05`，會抓到較多真實變化，因此 PA 較高，但 false alarm 也增加，使 UA 降低；threshold 越嚴格，例如 `-0.40`，UA 變高但漏報增加，PA 下降。紅色虛線標示 F1 最高的最佳 threshold。
+
+**結論：** 最佳門檻為 `Δ* < -0.10`，F1 = `0.74`。這個門檻在「不要漏掉太多真實災害變化」與「不要把太多穩定區誤報為變化」之間取得較好的平衡。
 
 - 閾值掃描表：[`output/HW_T2_threshold_sweep.csv`](output/HW_T2_threshold_sweep.csv)
 
@@ -57,13 +67,28 @@ NTU 遙測與空間資訊之分析與應用 (Prof. Su Wen-Ray) — Week 9 Homewo
 
 ![Task 3 confusion matrix](output/HW_T3_confusion_matrix.png)
 
+**圖說與判讀重點：**  
+這張 confusion matrix 使用老師提供的 ground-truth validation points 評估最佳 threshold。縱軸是真實類別，橫軸是模型預測類別。結果為 TN = `23`、FP = `3`、FN = `7`、TP = `14`。也就是 21 個實際變化點中抓到 14 個，26 個實際穩定點中正確排除 23 個。
+
+**結論：** Overall Accuracy = `78.7%`、PA = `66.7%`、UA = `82.4%`、Kappa = `0.56`、F1 = `0.74`。UA 高於 PA，代表被標成 change 的區域多半可信，但仍有約三分之一真實變化被漏掉，因此不能把 no-detection area 解讀成完全安全。
+
 - 精度表：[`output/HW_T3_metrics.csv`](output/HW_T3_metrics.csv)
 
 ### Task 4: Phantom Water and Confidence Map
 
 ![Task 4 phantom water comparison](output/HW_T4_phantom_water.png)
 
+**圖說與判讀重點：**  
+這張圖專門展示老師要求的 phantom-water error case。左圖是沒有使用 SCL 雲遮罩的 raw ΔNDWI，中圖是套用三幕交集 SCL mask 後的 ΔNDWI，右圖標出被遮罩移除的假訊號。未遮雲時，大面積雲與雲影會在 ΔNDWI 中形成類似水體增加的藍色訊號，造成「假水體」。
+
+**結論：** 未遮雲的 `ΔNDWI > 0.10` 像素數為 `319,165`，遮雲後降為 `87,871`，約 `72.5%` raw water-like signal 是雲/雲影造成或受其污染。這證明 SCL cloud masking 是本作業必要步驟，不是美化圖面的選項。
+
 ![Task 4 confidence map](output/HW_T4_confidence_map.png)
+
+**圖說與判讀重點：**  
+這張三區信心地圖把最佳 threshold 轉成 operational zones：紅色為 High Confidence，黃色為 Low Confidence，淺色為 No Detection。High zone 表示 ΔNDVI loss 強於 `1.5 × threshold`，是最值得優先調查或管制的核心變化區；Low zone 是 borderline change，需要後續 VHR 或 SAR 重新確認；No Detection 則表示未超過本次光學影像的變化門檻。
+
+**結論：** High-confidence area = `58.91 km²`，Low-confidence area = `28.07 km²`，No-detection area = `324.29 km²`。紅色區域沿河道、湖區、裸露/沉積帶與部分農地變化分布，因此應解讀為「高信心地表變化 footprint」，不是單一湖面面積，也不是直接等同所有紅色像素都需撤離。
 
 - 三區面積表：[`output/HW_T4_zone_areas.csv`](output/HW_T4_zone_areas.csv)
 
